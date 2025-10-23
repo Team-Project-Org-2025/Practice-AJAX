@@ -4,9 +4,7 @@ $(document).ready(function () {
     const $editUserForm = $('#editUserForm');
     
     // Mejorar la robustez del baseUrl
-    const baseUrl = (window.location.pathname.endsWith('/users') || window.location.pathname.endsWith('/users/')) 
-        ? window.location.pathname 
-        : '/BarkiOS/users';
+        const baseUrl = "/AJAX/";
 
     // --- Utilidades ---
     const escapeHtml = str => String(str ?? '')

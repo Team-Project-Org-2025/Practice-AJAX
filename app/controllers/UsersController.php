@@ -12,7 +12,6 @@ $userModel = new User();
 // 🔹 Acción principal (vista)
 // =================================================================
 function index() {
-    global $dolarBCVRate;
     // Esta función solo carga la plantilla de la vista
     require __DIR__ . '/../views/users-admin.php';
 }

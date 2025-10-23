@@ -27,27 +27,6 @@ class User extends Database {
     // LÓGICA DE AUTENTICACIÓN (Se mantiene la lógica de texto plano)
     // =============================================================
 
-    public function authenticate($email, $password) {
-        try {
-            $sql = "SELECT id, email, password_hash, nombre FROM users WHERE email = :email";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute(['email' => $email]);
-            $user = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-            if ($user) {
-                // 🚨 CÓDIGO INSEGURO: Comparación de texto plano (según tu lógica actual)
-                if ($password === $user['password_hash']) { 
-                    unset($user['password_hash']); 
-                    return $user;
-                }
-            }
-            return null;
-        } catch (Exception $e) {
-            error_log("Error de autenticación: " . $e->getMessage());
-            return null;
-        }
-    }
-
     // =============================================================
     // 🚨 NUEVOS MÉTODOS CRUD PARA GESTIÓN DE EMPLEADOS (USUARIOS) 🚨
     // =============================================================
