@@ -12,7 +12,7 @@ $base_url = '/AJAX/';
         <ul class="nav flex-column">
             <li class="nav-item">
                 <!-- Usando la variable de ruta base: -->
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="/AJAX/">
                     <i class="fas fa-user-shield"></i>
                     Usuarios
                 </a>
