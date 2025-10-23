@@ -29,7 +29,7 @@ handleRequest($userModel);
 // =================================================================
 function handleRequest($userModel) {
     // Limpiamos la acción
-    $action = $_GET['action'] ?? '';
+    $action = $_REQUEST['action'] ?? '';
     
     // Verificamos si es una solicitud AJAX
     $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&

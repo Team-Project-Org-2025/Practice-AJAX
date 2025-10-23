@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
-  // Base del controlador PHP (ajustado a tu estructura MVC)
-  const baseUrl = "/AJAX/app/controllers/UsersController.php";
+  // ✅ CORREGIDO: Usar el FrontController con parámetros
+ const baseUrl = "/AJAX/app/controllers/UsersController.php";
 
   // ============================================================
   // 🧩 Inicializar DataTable
@@ -10,9 +10,11 @@ $(document).ready(function () {
     ajax: {
       url: baseUrl,
       type: "GET",
-      data: { action: "get_users" },
+      data: { 
+        url: "users",  // ✅ Agregar parámetro 'url'
+        action: "get_users" 
+      },
       dataType: "json",
-      headers: { "X-Requested-With": "XMLHttpRequest" },
       dataSrc: function (json) {
         if (!json.success) {
           console.error("❌ Error al obtener usuarios:", json.message);
@@ -29,11 +31,8 @@ $(document).ready(function () {
         data: null,
         render: function (data) {
           return `
-            <button class="btn btn-warning btn-sm editUserBtn" data-id="${data.id}">
-              <i class="fas fa-edit"></i>
-            </button>
             <button class="btn btn-danger btn-sm deleteUserBtn" data-id="${data.id}">
-              <i class="fas fa-trash"></i>
+              <i class="fas fa-trash"></i> Eliminar
             </button>
           `;
         }
@@ -46,145 +45,65 @@ $(document).ready(function () {
   });
 
   // ============================================================
-  // ➕ AGREGAR USUARIO
+  // ➕ AGREGAR USUARIO - CORREGIDO
   // ============================================================
   $("#addUserForm").on("submit", function (e) {
     e.preventDefault();
 
+    // ✅ CORREGIDO: Agregar parámetros url y action al formData
+    const formData = $(this).serialize() + "&url=users&action=add_ajax";
+
     $.ajax({
       url: baseUrl,
       type: "POST",
-      data: $(this).serialize() + "&action=add_ajax",
-      headers: { "X-Requested-With": "XMLHttpRequest" },
+      data: formData,
       dataType: "json",
       success: function (response) {
         if (response.success) {
-          Swal.fire({
-            icon: "success",
-            title: "Usuario agregado",
-            text: response.message,
-            timer: 1500,
-            showConfirmButton: false
-          });
+          // Si no tienes SweetAlert, usa alert normal
+          alert("Usuario agregado: " + response.message);
           $("#addUserModal").modal("hide");
           $("#addUserForm")[0].reset();
           table.ajax.reload();
         } else {
-          Swal.fire("Error", response.message, "error");
+          alert("Error: " + response.message);
         }
       },
-      error: function (xhr) {
-        console.error(xhr.responseText);
-        Swal.fire("Error", "No se pudo agregar el usuario.", "error");
+      error: function (xhr, status, error) {
+        console.error("Error completo:", xhr.responseText);
+        alert("Error al agregar usuario: " + error);
       }
     });
   });
 
   // ============================================================
-  // ✏️ CARGAR DATOS PARA EDITAR
-  // ============================================================
-  $("#usersTable").on("click", ".editUserBtn", function () {
-    const id = $(this).data("id");
-
-    $.ajax({
-      url: baseUrl,
-      type: "GET",
-      data: { action: "get_users", id },
-      headers: { "X-Requested-With": "XMLHttpRequest" },
-      dataType: "json",
-      success: function (res) {
-        if (res.success && res.users.length > 0) {
-          const user = res.users[0];
-          $("#editUserId").val(user.id);
-          $("#editUserName").val(user.nombre);
-          $("#editUserEmail").val(user.email);
-          $("#editUserPassword").val("");
-          $("#editUserModal").modal("show");
-        } else {
-          Swal.fire("Error", "Usuario no encontrado.", "error");
-        }
-      },
-      error: function () {
-        Swal.fire("Error", "No se pudieron obtener los datos del usuario.", "error");
-      }
-    });
-  });
-
-  // ============================================================
-  // 💾 GUARDAR CAMBIOS EN EDICIÓN
-  // ============================================================
-  $("#editUserForm").on("submit", function (e) {
-    e.preventDefault();
-
-    $.ajax({
-      url: baseUrl,
-      type: "POST",
-      data: $(this).serialize() + "&action=edit_ajax",
-      headers: { "X-Requested-With": "XMLHttpRequest" },
-      dataType: "json",
-      success: function (response) {
-        if (response.success) {
-          Swal.fire({
-            icon: "success",
-            title: "Usuario actualizado",
-            text: response.message,
-            timer: 1500,
-            showConfirmButton: false
-          });
-          $("#editUserModal").modal("hide");
-          table.ajax.reload();
-        } else {
-          Swal.fire("Error", response.message, "error");
-        }
-      },
-      error: function (xhr) {
-        console.error(xhr.responseText);
-        Swal.fire("Error", "No se pudo actualizar el usuario.", "error");
-      }
-    });
-  });
-
-  // ============================================================
-  // 🗑️ ELIMINAR USUARIO
+  // 🗑️ ELIMINAR USUARIO - CORREGIDO
   // ============================================================
   $("#usersTable").on("click", ".deleteUserBtn", function () {
     const id = $(this).data("id");
 
-    Swal.fire({
-      title: "¿Eliminar usuario?",
-      text: "Esta acción no se puede deshacer.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Sí, eliminar"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          url: baseUrl,
-          type: "POST",
-          data: { action: "delete_ajax", id },
-          headers: { "X-Requested-With": "XMLHttpRequest" },
-          dataType: "json",
-          success: function (response) {
-            if (response.success) {
-              Swal.fire({
-                icon: "success",
-                title: "Eliminado",
-                text: response.message,
-                timer: 1500,
-                showConfirmButton: false
-              });
-              table.ajax.reload();
-            } else {
-              Swal.fire("Error", response.message, "error");
-            }
-          },
-          error: function (xhr) {
-            console.error(xhr.responseText);
-            Swal.fire("Error", "No se pudo eliminar el usuario.", "error");
-          }
-        });
+    if (!confirm("¿Está seguro de eliminar este usuario?")) return;
+
+    $.ajax({
+      url: baseUrl,
+      type: "POST",
+      data: { 
+        url: "users",  // ✅ Agregar parámetro 'url'
+        action: "delete_ajax", 
+        id: id 
+      },
+      dataType: "json",
+      success: function (response) {
+        if (response.success) {
+          alert("Eliminado: " + response.message);
+          table.ajax.reload();
+        } else {
+          alert("Error: " + response.message);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error completo:", xhr.responseText);
+        alert("Error al eliminar usuario: " + error);
       }
     });
   });
