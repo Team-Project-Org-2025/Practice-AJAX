@@ -1,7 +1,8 @@
 <?php 
 
- namespace Ajax;
+namespace Ajax;
 
+require __DIR__ . '/vendor/autoload.php';
 
  use Ajax\controllers\FrontController;
 
