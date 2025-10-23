@@ -1,12 +1,12 @@
 // filepath: /AJAX/public/assets/js/users-admin.js
 $(document).ready(function() {
     // URL base para las peticiones AJAX
-    const baseUrl = /AJAX/;
+    const baseUrl = '?url=users&action=';
 
     // Inicializar DataTable
     const tblUser = $('#usersTable').DataTable({
         ajax: {
-            url: baseUrl,
+            url: baseUrl + 'get_users',
             method: 'GET',
             dataSrc: 'users'
         },
@@ -33,7 +33,7 @@ $(document).ready(function() {
         const userId = $(this).val();
         
         $.ajax({
-            url: baseUrl + '?action=delete_ajax',
+            url: baseUrl + 'delete_ajax',
             method: 'POST',
             data: { id: userId },
             success: function(response) {
@@ -57,7 +57,7 @@ $(document).ready(function() {
         };
 
         $.ajax({
-            url: baseUrl + '?action=add_ajax',
+            url: baseUrl + 'add_ajax',
             method: 'POST',
             data: formData,
             success: function(response) {

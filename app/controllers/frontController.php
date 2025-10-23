@@ -5,82 +5,48 @@ namespace Ajax\controllers;
 use Exception;
 
 class FrontController {
-    private $controllerName; 
-    private $action;         
-    private $params = [];
+    private $dir;
+    private $controller;
+    private $url;
 
     public function __construct() {
-
+        // Definir ROOT_PATH si no existe
         if (!defined('ROOT_PATH')) {
             define('ROOT_PATH', dirname(__DIR__, 2) . '/');
         }
 
-        $this->parseUrl();
-        $this->loadController();
-    }
-
-    private function parseUrl(): void {
-        $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
-        $uri = parse_url($requestUri, PHP_URL_PATH);
-
-        $base = '/AJAX/';
-        if (stripos($uri, $base) === 0) {
-            $uri = substr($uri, strlen($base));
-        }
-
-        $segments = array_values(array_filter(explode('/', $uri)));
-
-        if (empty($segments)) {
-
-            $this->controllerName = 'users'; 
-            $this->action = 'index';
-            return;
-        }
-
-
-        $this->controllerName = $this->sanitize($segments[0]); 
-        $this->action = $this->sanitize($segments[1] ?? 'index'); 
-        $this->params = array_slice($segments, 2); 
-    }
-
-    private function loadController(): void {
-        $controllerFile = ROOT_PATH . "app/controllers/" . ucfirst($this->controllerName) . "Controller.php";
-
-        if (!file_exists($controllerFile)) {
-            $this->renderNotFound("El archivo del controlador '{$this->controllerName}' no existe en la ruta esperada.");
-            return;
-        }
-
-        require_once $controllerFile;
-
-        if (!function_exists($this->action)) {
-            $this->renderNotFound("La función '{$this->action}()' no existe en el controlador '{$this->controllerName}'.");
-            return;
-        }
-
-        try {
-            call_user_func_array($this->action, $this->params);
-        } catch (Exception $e) {
-            http_response_code(500);
-            error_log("Internal Error in {$this->controllerName}/{$this->action}: " . $e->getMessage());
-            echo "<h1>Error 500</h1><p>Ha ocurrido un error interno. Por favor, consulte los registros (logs).</p>";
+        // Si existe y no está vacía una request con el nombre de url
+        if (isset($_REQUEST["url"])) {
+            // Se asigna el valor de la request a la variable url
+            $this->url = $_REQUEST["url"];
+            
+            // Directorio donde se encuentran los controladores
+            $this->dir = ROOT_PATH . 'app/controllers/';
+            
+            // Concatenación del nombre del controlador con el nombre de la clase
+            $this->controller = 'Controller.php';
+            
+            // Se ejecuta el método getURL que se encarga de cargar el controlador correspondiente
+            $this->getURL();
+        } else {
+            // Si no existe la request, redirigir al controlador por defecto
+            header("Location: ?url=users");
             exit();
         }
     }
 
-    private function sanitize(string $input): string {
-        return preg_replace('/[^a-zA-Z0-9_]/', '', $input);
-    }
-
-    private function renderNotFound(string $message, bool $isAjax = false): void {
-        http_response_code(404);
-
-        if ($isAjax) {
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => $message]);
+    private function getURL(): void {
+        // Construir la ruta completa del controlador
+        $controllerPath = $this->dir . ucfirst($this->url) . $this->controller;
+        
+        // Si existe el controlador en la carpeta de controladores
+        if (file_exists($controllerPath)) {
+            // Se llama al controlador correspondiente
+            require_once($controllerPath);
         } else {
-            echo "<h1>Error 404 - Recurso No Encontrado</h1><p>$message</p>";
+            // Si no existe, redirigir al controlador por defecto
+            header("Location: ?url=users");
+            exit();
         }
-        exit();
     }
 }
