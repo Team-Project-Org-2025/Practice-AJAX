@@ -1,6 +1,8 @@
 <?php
+
 // app/models/User.php
 namespace Ajax\models;
+require_once __DIR__ . '/../core/Database.php';
 
 use Ajax\core\Database; 
 use PDO; 

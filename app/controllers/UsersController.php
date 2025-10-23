@@ -1,6 +1,6 @@
 <?php
 // filepath: c:\xampp\htdocs\BarkiOS\app\controllers\Admin\UserController.php
-
+require_once __DIR__ . '/../models/User.php';
 use Ajax\models\User;
 
 
