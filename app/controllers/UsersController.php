@@ -83,21 +83,26 @@ function delete() {
 function get_users() {
     global $userModel;
     
+    // Set header first
     header('Content-Type: application/json; charset=utf-8');
     
     try {
         if (isset($_GET['id'])) {
             $user = $userModel->getById((int)$_GET['id']);
-            if (!$user) throw new Exception("Usuario no encontrado");
+            if (!$user) {
+                throw new Exception("Usuario no encontrado");
+            }
             echo json_encode(['success' => true, 'users' => [$user]]);
         } else {
             $users = $userModel->getAll();
-            echo json_encode(['success' => true, 'data' => $users, 'count' => count($users)]);
+            // Make sure $users is an array of objects with 'id', 'nombre', 'email'
+            echo json_encode(['success' => true, 'users' => $users]);
         }
     } catch (Exception $e) {
+        // Output error as JSON, not HTML
         echo json_encode(['success' => false, 'message' => $e->getMessage()]);
     }
-    exit();
+    exit(); // Prevent any extra output
 }
 
 function add_ajax() {
