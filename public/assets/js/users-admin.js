@@ -1,17 +1,11 @@
 $(document).ready(function () {
-
-  // ✅ CORREGIDO: Usar el FrontController con parámetros
  const baseUrl = "/AJAX/app/controllers/UsersController.php";
-
-  // ============================================================
-  // 🧩 Inicializar DataTable
-  // ============================================================
   const table = $('#usersTable').DataTable({
     ajax: {
       url: baseUrl,
       type: "GET",
       data: { 
-        url: "users",  // ✅ Agregar parámetro 'url'
+        url: "users",
         action: "get_users" 
       },
       dataType: "json",
@@ -44,13 +38,8 @@ $(document).ready(function () {
     responsive: true
   });
 
-  // ============================================================
-  // ➕ AGREGAR USUARIO - CORREGIDO
-  // ============================================================
   $("#addUserForm").on("submit", function (e) {
     e.preventDefault();
-
-    // ✅ CORREGIDO: Agregar parámetros url y action al formData
     const formData = $(this).serialize() + "&url=users&action=add_ajax";
 
     $.ajax({
@@ -76,9 +65,6 @@ $(document).ready(function () {
     });
   });
 
-  // ============================================================
-  // 🗑️ ELIMINAR USUARIO - CORREGIDO
-  // ============================================================
   $("#usersTable").on("click", ".deleteUserBtn", function () {
     const id = $(this).data("id");
 
@@ -88,7 +74,7 @@ $(document).ready(function () {
       url: baseUrl,
       type: "POST",
       data: { 
-        url: "users",  // ✅ Agregar parámetro 'url'
+        url: "users", 
         action: "delete_ajax", 
         id: id 
       },
