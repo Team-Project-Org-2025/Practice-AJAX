@@ -15,7 +15,7 @@ abstract class Database extends PDO {
         try {
             
             $this->db = new PDO(
-                'mysql:host=localhost;dbname=test;charset=uft8',
+                'mysql:host=localhost;dbname=test;charset=utf8',
                 'root',
                 '',
                 [

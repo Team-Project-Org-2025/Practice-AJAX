@@ -8,5 +8,3 @@ require_once 'vendor/autoload.php';
 
  $front = new FrontController();
 ?>
-
- <h1>Holi</h1>
