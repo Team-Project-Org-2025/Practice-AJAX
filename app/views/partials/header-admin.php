@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($pageTitle) ? $pageTitle : 'Garage Barki' ?></title>
     <!-- Bootstrap CSS -->
-    <link href="/BarkiOS/public/assets/libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/AJAX/public/assets/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="/AJAX/public/assets/css/bootstrap.min.css">
     <!-- Font Awesome -->
     <link href="/BarkiOS/public/assets/libs/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
     <!-- Google Fonts -->
@@ -15,6 +16,6 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href= "/BarkiOS/public/assets/icons/Logo - Garage Barki.webp" type="image/x-icon">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/BarkiOS/public/assets/css/admin-styles.css">
+    <link rel="stylesheet" href="/AJAX/public/assets/css/admin-styles.css">
 </head>
 <body>

@@ -105,17 +105,13 @@
   </div>
 </div>
 
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- DataTables -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/AJAX/public/assets/js/jquery.min.js"></script>
+<script src="/AJAX/public/assets/js/bootstrap.bundle.min.js"></script>
+<script src="/AJAX/public/assets/js/dataTables.min.js"></script>
+<script src="/AJAX/public/assets/js/dataTables.bootstrap5.min.js"></script>
 <script src="/AJAX/public/assets/js/users-admin.js"></script>
+
+
 
 </body>
 </html>
