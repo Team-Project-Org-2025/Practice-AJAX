@@ -1,127 +1,74 @@
-$(document).ready(function () {
+// filepath: /AJAX/public/assets/js/users-admin.js
+$(document).ready(function() {
+    // URL base para las peticiones AJAX
+    const baseUrl = /AJAX/;
 
-  const baseUrl = "/AJAX/users/";
-
-  const table = $('#usersTable').DataTable({
-    ajax: {
-      url: baseUrl + "get_users",
-      type: "GET",
-      headers: { "X-Requested-With": "XMLHttpRequest" },
-      dataSrc: function (json) {
-        if (!json.success) {
-          console.error("❌ Error al obtener usuarios", json.message);
-          return [];
+    // Inicializar DataTable
+    const tblUser = $('#usersTable').DataTable({
+        ajax: {
+            url: baseUrl,
+            method: 'GET',
+            dataSrc: 'users'
+        },
+        columns: [
+            { data: 'id' },
+            { data: 'nombre' },
+            { data: 'email' },
+            { 
+                data: null, 
+                render: function(data) {
+                    return `<button value="${data.id}" class="btn btn-danger btn-sm btn-eliminar">Eliminar</button>`;
+                }
+            }
+        ],
+        language: {
+            url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
         }
-        return json.users;
-      }
-    },
-    columns: [
-      { data: "id" },
-      { data: "nombre" },
-      { data: "email" },
-      {
-        data: null,
-        render: function (data) {
-          return `
-            <button class="btn btn-warning btn-sm editUserBtn" data-id="${data.id}">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn btn-danger btn-sm deleteUserBtn" data-id="${data.id}">
-              <i class="fas fa-trash"></i>
-            </button>
-          `;
-        }
-      }
-    ],
-    language: {
-      url: "https://cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json"
-    }
-  });
-
-  // ✅ AGREGAR USUARIO
-  $("#addUserForm").on("submit", function (e) {
-    e.preventDefault();
-
-    $.ajax({
-      url: baseUrl + "add_ajax",
-      type: "POST",
-      data: $(this).serialize(),
-      headers: { "X-Requested-With": "XMLHttpRequest" },
-      dataType: "json",
-      success: function (response) {
-        alert(response.message);
-        if (response.success) {
-          $("#addUserModal").modal("hide");
-          $("#addUserForm")[0].reset();
-          table.ajax.reload();
-        }
-      }
     });
-  });
 
-  // ✅ CARGAR DATOS DEL USUARIO A EDITAR
-  $("#usersTable").on("click", ".editUserBtn", function () {
-    const id = $(this).data("id");
-
-    $.ajax({
-      url: baseUrl + "get_users",
-      type: "GET",
-      data: { id },
-      headers: { "X-Requested-With": "XMLHttpRequest" },
-      dataType: "json",
-      success: function (res) {
-        const user = res.users[0];
-
-        $("#editUserIdHidden").val(user.id);
-        $("#editUserId").val(user.id);
-        $("#editUserName").val(user.nombre);
-        $("#editUserEmail").val(user.email);
-        $("#editUserPassword").val("");
-
-        $("#editUserModal").modal("show");
-      }
+    // Eliminar usuario
+    $(document).on('click', '.btn-eliminar', function() {
+        if (!confirm('¿Está seguro de eliminar este usuario?')) return;
+        
+        const userId = $(this).val();
+        
+        $.ajax({
+            url: baseUrl + '?action=delete_ajax',
+            method: 'POST',
+            data: { id: userId },
+            success: function(response) {
+                alert(response.message);
+                tblUser.ajax.reload();
+            },
+            error: function() {
+                alert('Error al eliminar usuario');
+            }
+        });
     });
-  });
 
-  // ✅ EDITAR USUARIO
-  $("#editUserForm").on("submit", function (e) {
-    e.preventDefault();
+    // Agregar usuario
+    $('#addUserForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = {
+            nombre: $('#addUserName').val(),
+            email: $('#addUserEmail').val(),
+            password: $('#addUserPassword').val()
+        };
 
-    $.ajax({
-      url: baseUrl + "edit_ajax",
-      type: "POST",
-      data: $(this).serialize(),
-      headers: { "X-Requested-With": "XMLHttpRequest" },
-      dataType: "json",
-      success: function (response) {
-        alert(response.message);
-        if (response.success) {
-          $("#editUserModal").modal("hide");
-          table.ajax.reload();
-        }
-      }
+        $.ajax({
+            url: baseUrl + '?action=add_ajax',
+            method: 'POST',
+            data: formData,
+            success: function(response) {
+                alert(response.message);
+                $('#addUserModal').modal('hide');
+                $('#addUserForm')[0].reset();
+                tblUser.ajax.reload();
+            },
+            error: function() {
+                alert('Error al agregar usuario');
+            }
+        });
     });
-  });
-
-  // ✅ ELIMINAR USUARIO
-  $("#usersTable").on("click", ".deleteUserBtn", function () {
-    const id = $(this).data("id");
-
-    if (!confirm("¿Seguro que deseas eliminar este usuario?")) return;
-
-    $.ajax({
-      url: baseUrl + "delete_ajax",
-      type: "POST",
-      data: { id },
-      headers: { "X-Requested-With": "XMLHttpRequest" },
-      dataType: "json",
-      success: function (response) {
-        alert(response.message);
-        if (response.success) {
-          table.ajax.reload();
-        }
-      }
-    });
-  });
-
 });
