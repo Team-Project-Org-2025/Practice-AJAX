@@ -1,0 +1,14 @@
+# Establece la base de reescritura (Asegúrate de que esta ruta coincida con tu subdirectorio)
+# Basado en tu URL (http://localhost/AJAX/users), la base es /AJAX/
+RewriteBase /AJAX/ 
+
+# 1. Si la petición es un archivo real (CSS, JS, imagen), no hacer nada
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# 2. Si la petición es un directorio real, no hacer nada
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# 3. Si no es un archivo ni un directorio, reescribir la URL a index.php
+# [QSA] mantiene los parámetros de la consulta (query string)
+# [L] significa que es la última regla a aplicar
+RewriteRule ^(.*)$ index.php [QSA,L]

@@ -1,6 +1,6 @@
 <?php
 
-namespace ajax\core;
+namespace Ajax\core;
 
 use Exception;
 use PDO;
