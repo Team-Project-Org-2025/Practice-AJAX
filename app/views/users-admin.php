@@ -110,6 +110,7 @@
 <script src="/AJAX/public/assets/js/dataTables.min.js"></script>
 <script src="/AJAX/public/assets/js/dataTables.bootstrap5.min.js"></script>
 <script src="/AJAX/public/assets/js/users-admin.js"></script>
+<script src="/AJAX/public/assets/js/validaciones.js"></script>
 
 
 
