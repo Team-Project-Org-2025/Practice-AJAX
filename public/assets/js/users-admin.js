@@ -1,55 +1,54 @@
-$(document).ready(function () {
+$(document).ready(function() {
     const baseUrl = "/AJAX/app/controllers/UsersController.php";
+    const table = $("#usersTable").DataTable({
 
-    const table = $('#usersTable').DataTable({
-        ajax: {
-            url: baseUrl,
-            data: { action: "get_users" },
-            dataSrc: "users"
+        ajax:{
+            url:baseUrl,
+            data: {action: "get_users"},
+            dataSrc:"users",
         },
-        columns: [
-            { data: "id" },
-            { data: "nombre" },
-            { data: "email" },
-            {
-                data: "id",
-                render: function (data) {
-                    return `<button class="btn btn-danger btn-sm" onclick="eliminarUsuario(${data})">Eliminar</button>`;
+        columns:[
+            {data: "id"},
+            {data: "nombre"},
+            {data: "email"},
+            {data: "id",
+                render: function(data) {
+                    return `<button class = "btn btn-danger btn-sm" onclick="eliminarUsuario(${data})">Eliminar</button>`
                 }
             }
         ]
+
     });
 
-    $("#addUserForm").on("submit", function (e) {
-        e.preventDefault();
-        
-        const datos = {
-            nombre: $("#addUserName").val(),
-            email: $("#addUserEmail").val(),
-            password: $("#addUserPassword").val()
-        };
+$("#addUserForm").on("submit", function(e){
+    e.preventDefault();
 
-        const error = validarFormulario(datos);
-        if (error) {
-            alert(error);
-            return;
-        }
+    const datos = {
+        nombre: $("#addUserName").val(),
+        email: $("#addUserEmail").val(),
+        password: $("#addUserPassword").val()
+    }
+    const error = validarFormulario(datos);
+    if (error) {
+        alert(error)
+        return;
+    }
 
-        $.ajax({
-            url: baseUrl,
-            type: "POST",
-            data: { ...datos, action: "add_ajax" },
-            success: function (response) {
+    $.ajax({
+        url: baseUrl,
+        type: "POST",
+        data: {...datos, action: "add_ajax"},
+        success:function(response) {
                 alert(response.message);
                 $("#addUserModal").modal("hide");
                 $("#addUserForm")[0].reset();
                 table.ajax.reload();
-            },
-            error: function () {
-                alert("Error al agregar usuario");
-            }
-        });
+        },
+        error: function(){
+            alert("Error al agregar el usuario");
+        }
     });
+});
 
     window.eliminarUsuario = function(id) {
         if (!confirm("¿Eliminar usuario?")) return;
