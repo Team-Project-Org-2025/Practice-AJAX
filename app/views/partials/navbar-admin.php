@@ -13,7 +13,7 @@ $base_url = '/AJAX/';
             <li class="nav-item">
                 <!-- Usando la variable de ruta base: -->
                 <a class="nav-link" href="/AJAX/">
-                    <i class="fas fa-user-shield"></i>
+                    <i class="fas fa-users-cog"></i>
                     Usuarios
                 </a>
             </li>
