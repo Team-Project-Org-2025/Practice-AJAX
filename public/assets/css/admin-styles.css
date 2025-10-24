@@ -515,8 +515,29 @@ body {
 }
 
 
-/* Tabla Detalle de Venta */
-#saleDetailsContent table {
-  width: 100% !important;
+/* Tabla de Clientes - Alineación específica */
+#clientsTable tbody tr td:nth-child(-n+4) {
+  text-align: left;
+}
+
+#clientsTable thead th:nth-child(-n+4) {
+  text-align: left;
+}
+
+#clientsTable thead th:nth-child(5) {
+  text-align: left;
+}
+
+#clientsTable tbody tr td:nth-child(5) .btn-group {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+#clientsTable tbody tr td:nth-child(5) .btn-group .btn {
   margin: 0;
+  padding: 0.35rem 0.5rem;
+  line-height: 1;
+  border-radius: 6px;
 }
